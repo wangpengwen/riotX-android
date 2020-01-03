@@ -1141,6 +1141,9 @@ class RoomDetailFragment @Inject constructor(
                 .show(requireActivity().supportFragmentManager, "DISPLAY_EDITS")
     }
 
+    override fun onAction(action: RoomDetailAction) {
+        roomDetailViewModel.handle(action)
+    }
     override fun onRoomCreateLinkClicked(url: String) {
         permalinkHandler
                 .launch(requireContext(), url, object : NavigateToRoomInterceptor {

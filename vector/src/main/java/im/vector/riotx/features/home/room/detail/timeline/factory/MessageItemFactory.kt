@@ -106,8 +106,19 @@ class MessageItemFactory @Inject constructor(
             is MessageVideoContent     -> buildVideoMessageItem(messageContent, informationData, highlight, callback, attributes)
             is MessageFileContent      -> buildFileMessageItem(messageContent, informationData, highlight, callback, attributes)
             is MessageAudioContent     -> buildAudioMessageItem(messageContent, informationData, highlight, callback, attributes)
-            else                       -> buildNotHandledMessageItem(messageContent, informationData, highlight, callback)
+            is MessageOptionsContent   -> buildPollMessageItem(messageContent, informationData, highlight, callback, attributes)
+            else                       -> buildNotHandledMessageItem(messageContent, informationData, highlight, callback, attributes)
         }
+    }
+
+    private fun buildPollMessageItem(messageContent: MessageOptionsContent, informationData: MessageInformationData, highlight: Boolean, callback: TimelineEventController.Callback?, attributes: AbsMessageItem.Attributes): VectorEpoxyModel<*>? {
+        return MessagePollItem_()
+                .attributes(attributes)
+                .callback(callback)
+                .informationData(informationData)
+                .leftGuideline(avatarSizeProvider.leftGuideline)
+                .optionsContent(messageContent)
+                .highlighted(highlight)
     }
 
     private fun buildAudioMessageItem(messageContent: MessageAudioContent,
@@ -152,9 +163,11 @@ class MessageItemFactory @Inject constructor(
     private fun buildNotHandledMessageItem(messageContent: MessageContent,
                                            informationData: MessageInformationData,
                                            highlight: Boolean,
-                                           callback: TimelineEventController.Callback?): DefaultItem? {
-        val text = "${messageContent.type} message events are not yet handled"
-        return defaultItemFactory.create(text, informationData, highlight, callback)
+                                           callback: TimelineEventController.Callback?, attributes: AbsMessageItem.Attributes): MessageTextItem? {
+        // For compatibility reason we should display the body
+        return buildMessageTextItem(messageContent.body, false, informationData, highlight, callback, attributes)
+//        val text = "${messageContent.type} message events are not yet handled"
+//        return defaultItemFactory.create(text, informationData, highlight, callback)
     }
 
     private fun buildImageMessageItem(messageContent: MessageImageInfoContent,
@@ -201,7 +214,8 @@ class MessageItemFactory @Inject constructor(
         val (maxWidth, maxHeight) = timelineMediaSizeProvider.getMaxSize()
         val thumbnailData = ImageContentRenderer.Data(
                 filename = messageContent.body,
-                url = messageContent.videoInfo?.thumbnailFile?.url ?: messageContent.videoInfo?.thumbnailUrl,
+                url = messageContent.videoInfo?.thumbnailFile?.url
+                        ?: messageContent.videoInfo?.thumbnailUrl,
                 elementToDecrypt = messageContent.videoInfo?.thumbnailFile?.toElementToDecrypt(),
                 height = messageContent.videoInfo?.height,
                 maxHeight = maxHeight,

@@ -114,6 +114,21 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ))
     }
 
+    fun createPollReplyEvent(roomId: String,
+                               pollEventId: String,
+                               optionIndex: Int,
+                               optionLabel: String): Event {
+        return createEvent(roomId,
+                MessagePollResponseContent(
+                        body = optionLabel,
+                        relatesTo = RelationDefaultContent(
+                                type = RelationType.RESPONSE,
+                                option = optionIndex,
+                                eventId = pollEventId)
+
+                ))
+    }
+
     fun createReplaceTextOfReply(roomId: String, eventReplaced: TimelineEvent,
                                  originalEvent: TimelineEvent,
                                  newBodyText: String,

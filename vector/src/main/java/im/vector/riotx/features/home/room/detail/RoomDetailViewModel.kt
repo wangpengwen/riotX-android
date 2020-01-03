@@ -184,6 +184,7 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
             is RoomDetailAction.IgnoreUser                       -> handleIgnoreUser(action)
             is RoomDetailAction.EnterTrackingUnreadMessagesState -> startTrackingUnreadMessages()
             is RoomDetailAction.ExitTrackingUnreadMessagesState  -> stopTrackingUnreadMessages()
+            is RoomDetailAction.ReplyToPoll -> replyToPoll(action)
         }
     }
 
@@ -774,6 +775,10 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
                 _requestLiveData.postValue(LiveEvent(Fail(failure)))
             }
         })
+    }
+
+    private fun replyToPoll(action: RoomDetailAction.ReplyToPoll) {
+        room.sendPollReply(action.eventId, action.optionIndex, action.optionValue)
     }
 
     private fun observeSyncState() {
