@@ -91,7 +91,7 @@ class MessageItemFactory @Inject constructor(
         if (messageContent.relatesTo?.type == RelationType.REPLACE
                 || event.isEncrypted() && event.root.content.toModel<EncryptedEventContent>()?.relatesTo?.type == RelationType.REPLACE
         ) {
-            // This is an edit event, we should it when debugging as a notice event
+            // This is an edit event, we should display it when debugging as a notice event
             return noticeItemFactory.create(event, highlight, callback)
         }
         val attributes = messageItemAttributesFactory.create(messageContent, informationData, callback)
@@ -107,6 +107,7 @@ class MessageItemFactory @Inject constructor(
             is MessageFileContent      -> buildFileMessageItem(messageContent, informationData, highlight, callback, attributes)
             is MessageAudioContent     -> buildAudioMessageItem(messageContent, informationData, highlight, callback, attributes)
             is MessageOptionsContent   -> buildPollMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessagePollResponseContent -> noticeItemFactory.create(event, highlight, callback)
             else                       -> buildNotHandledMessageItem(messageContent, informationData, highlight, callback, attributes)
         }
     }

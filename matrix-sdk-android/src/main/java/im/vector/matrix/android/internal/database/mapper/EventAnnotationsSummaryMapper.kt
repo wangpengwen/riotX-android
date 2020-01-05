@@ -16,11 +16,15 @@
 
 package im.vector.matrix.android.internal.database.mapper
 
+import im.vector.matrix.android.api.session.events.model.toContent
+import im.vector.matrix.android.api.session.events.model.toModel
 import im.vector.matrix.android.api.session.room.model.EditAggregatedSummary
 import im.vector.matrix.android.api.session.room.model.EventAnnotationsSummary
+import im.vector.matrix.android.api.session.room.model.PollResponseAggregatedSummary
 import im.vector.matrix.android.api.session.room.model.ReactionAggregatedSummary
 import im.vector.matrix.android.internal.database.model.EditAggregatedSummaryEntity
 import im.vector.matrix.android.internal.database.model.EventAnnotationsSummaryEntity
+import im.vector.matrix.android.internal.database.model.PollResponseAggregatedSummaryEntity
 import im.vector.matrix.android.internal.database.model.ReactionAggregatedSummaryEntity
 import io.realm.RealmList
 
@@ -45,7 +49,11 @@ internal object EventAnnotationsSummaryMapper {
                             it.sourceLocalEchoEvents.toList(),
                             it.lastEditTs
                     )
+                },
+                pollResponseSummary = annotationsSummary.pollResponseSummary?.let {
+                    PollResponseAggregatedSummaryEntityMapper.map(it)
                 }
+
         )
     }
 
@@ -74,6 +82,9 @@ internal object EventAnnotationsSummaryMapper {
                     )
                 })
             }
+        }
+        eventAnnotationsSummaryEntity.pollResponseSummary = annotationsSummary.pollResponseSummary?.let {
+            PollResponseAggregatedSummaryEntityMapper.map(it)
         }
         return eventAnnotationsSummaryEntity
     }
