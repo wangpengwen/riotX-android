@@ -129,6 +129,30 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ))
     }
 
+    fun createPollEvent(roomId: String,
+                             question: String,
+                             options: List<Pair<String, String>>) : Event {
+        val compatLabel = buildString {
+            append(question)
+            append("\n")
+            options.forEach {
+                append("\n")
+                append(it.second)
+            }
+        }
+        return createEvent(
+                roomId,
+                MessageOptionsContent(
+                        body = compatLabel,
+                        label = question,
+                        optionType = OptionsType.POLL.value,
+                        options = options.map {
+                            OptionItems(it.first, it.second)
+                        }
+                )
+        )
+    }
+
     fun createReplaceTextOfReply(roomId: String, eventReplaced: TimelineEvent,
                                  originalEvent: TimelineEvent,
                                  newBodyText: String,

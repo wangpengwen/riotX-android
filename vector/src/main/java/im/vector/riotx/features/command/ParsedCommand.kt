@@ -46,4 +46,5 @@ sealed class ParsedCommand {
     class SetMarkdown(val enable: Boolean) : ParsedCommand()
     object ClearScalarToken : ParsedCommand()
     class SendSpoiler(val message: String) : ParsedCommand()
+    class SendPoll(val question: String, val options: List<String>) : ParsedCommand()
 }

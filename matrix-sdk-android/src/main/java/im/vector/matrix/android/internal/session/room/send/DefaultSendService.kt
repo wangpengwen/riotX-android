@@ -91,6 +91,13 @@ internal class DefaultSendService @AssistedInject constructor(@Assisted private 
         return sendEvent(event)
     }
 
+    override fun sendPoll(question: String, options: List<Pair<String, String>>) {
+        localEchoEventFactory.createPollEvent(roomId, question, options).also {
+            saveLocalEcho(it)
+            sendEvent(it)
+        }
+    }
+
     private fun sendEvent(event: Event): Cancelable {
         // Encrypted room handling
         return if (cryptoService.isRoomEncrypted(roomId)) {
@@ -164,7 +171,8 @@ internal class DefaultSendService @AssistedInject constructor(@Assisted private 
 
     override fun deleteFailedEcho(localEcho: TimelineEvent) {
         monarchy.writeAsync { realm ->
-            TimelineEventEntity.where(realm, roomId = roomId, eventId = localEcho.root.eventId ?: "").findFirst()?.let {
+            TimelineEventEntity.where(realm, roomId = roomId, eventId = localEcho.root.eventId
+                    ?: "").findFirst()?.let {
                 it.deleteFromRealm()
             }
             EventEntity.where(realm, eventId = localEcho.root.eventId ?: "").findFirst()?.let {
