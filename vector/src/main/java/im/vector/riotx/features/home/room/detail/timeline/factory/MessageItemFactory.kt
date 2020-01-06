@@ -99,20 +99,24 @@ class MessageItemFactory @Inject constructor(
 //        val all = event.root.toContent()
 //        val ev = all.toModel<Event>()
         return when (messageContent) {
-            is MessageEmoteContent     -> buildEmoteMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageTextContent      -> buildItemForTextContent(messageContent, informationData, highlight, callback, attributes)
-            is MessageImageInfoContent -> buildImageMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageNoticeContent    -> buildNoticeMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageVideoContent     -> buildVideoMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageFileContent      -> buildFileMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageAudioContent     -> buildAudioMessageItem(messageContent, informationData, highlight, callback, attributes)
-            is MessageOptionsContent   -> buildPollMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageEmoteContent        -> buildEmoteMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageTextContent         -> buildItemForTextContent(messageContent, informationData, highlight, callback, attributes)
+            is MessageImageInfoContent    -> buildImageMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageNoticeContent       -> buildNoticeMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageVideoContent        -> buildVideoMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageFileContent         -> buildFileMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageAudioContent        -> buildAudioMessageItem(messageContent, informationData, highlight, callback, attributes)
+            is MessageOptionsContent      -> buildPollMessageItem(messageContent, informationData, highlight, callback, attributes)
             is MessagePollResponseContent -> noticeItemFactory.create(event, highlight, callback)
-            else                       -> buildNotHandledMessageItem(messageContent, informationData, highlight, callback, attributes)
+            else                          -> buildNotHandledMessageItem(messageContent, informationData, highlight, callback, attributes)
         }
     }
 
-    private fun buildPollMessageItem(messageContent: MessageOptionsContent, informationData: MessageInformationData, highlight: Boolean, callback: TimelineEventController.Callback?, attributes: AbsMessageItem.Attributes): VectorEpoxyModel<*>? {
+    private fun buildPollMessageItem(messageContent: MessageOptionsContent,
+                                     informationData: MessageInformationData,
+                                     highlight: Boolean,
+                                     callback: TimelineEventController.Callback?,
+                                     attributes: AbsMessageItem.Attributes): VectorEpoxyModel<*>? {
         return MessagePollItem_()
                 .attributes(attributes)
                 .callback(callback)
