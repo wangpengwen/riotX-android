@@ -21,7 +21,9 @@ import butterknife.BindView
 import butterknife.OnClick
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.LiveEvent
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class KeysBackupRestoreSuccessFragment @Inject constructor() : VectorBaseFragment() {
@@ -50,6 +52,8 @@ class KeysBackupRestoreSuccessFragment @Inject constructor() : VectorBaseFragmen
         // We don't put emoji in string xml as it will crash on old devices
         mSuccessText.text = context?.getString(R.string.keys_backup_restore_success_title, "🎉")
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.keys_backup_setup_done_button)
     fun onDone() {

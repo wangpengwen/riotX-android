@@ -29,7 +29,8 @@ import im.vector.matrix.android.api.failure.MatrixError
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.OnBackPressed
 import im.vector.riotx.core.platform.VectorBaseFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.net.ssl.HttpsURLConnection
 
 /**
@@ -58,26 +59,11 @@ abstract class AbstractLoginFragment : VectorBaseFragment(), OnBackPressed {
         super.onViewCreated(view, savedInstanceState)
 
         loginSharedActionViewModel = activityViewModelProvider.get(LoginSharedActionViewModel::class.java)
-
-        loginViewModel.viewEvents
-                .observe()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    handleLoginViewEvents(it)
-                }
-                .disposeOnDestroyView()
     }
 
-    private fun handleLoginViewEvents(loginViewEvents: LoginViewEvents) {
-        when (loginViewEvents) {
-            is LoginViewEvents.Error -> showError(loginViewEvents.throwable)
-            else                     ->
-                // This is handled by the Activity
-                Unit
-        }
-    }
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = loginViewModel.viewEvents
 
-    private fun showError(throwable: Throwable) {
+    override fun showFailure(throwable: Throwable) {
         when (throwable) {
             is Failure.ServerError -> {
                 if (throwable.error.code == MatrixError.M_FORBIDDEN
@@ -96,11 +82,7 @@ abstract class AbstractLoginFragment : VectorBaseFragment(), OnBackPressed {
     }
 
     open fun onError(throwable: Throwable) {
-        AlertDialog.Builder(requireActivity())
-                .setTitle(R.string.dialog_title_error)
-                .setMessage(errorFormatter.toHumanReadable(throwable))
-                .setPositiveButton(R.string.ok, null)
-                .show()
+        super.showFailure(throwable)
     }
 
     override fun onBackPressed(toolbarButton: Boolean): Boolean {

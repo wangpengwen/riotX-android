@@ -20,7 +20,12 @@ import android.net.Uri
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.FragmentViewModelContext
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.ViewModelContext
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.squareup.inject.assisted.Assisted
@@ -55,10 +60,9 @@ import im.vector.riotx.core.extensions.postLiveEvent
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.resources.StringProvider
 import im.vector.riotx.core.resources.UserPreferencesProvider
-import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.LiveEvent
-import im.vector.riotx.core.utils.PublishDataSource
 import im.vector.riotx.core.utils.subscribeLogError
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.command.CommandParser
 import im.vector.riotx.features.command.ParsedCommand
 import im.vector.riotx.features.home.room.detail.timeline.helper.TimelineDisplayableEvents
@@ -103,9 +107,6 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
     private var timelineEvents = PublishRelay.create<List<TimelineEvent>>()
     var timeline = room.createTimeline(eventId, timelineSettings)
         private set
-
-    private val _viewEvents = PublishDataSource<RoomDetailViewEvents>()
-    val viewEvents: DataSource<RoomDetailViewEvents> = _viewEvents
 
     // Can be used for several actions, for a one shot result
     private val _requestLiveData = MutableLiveData<LiveEvent<Async<RoomDetailAction>>>()
@@ -887,7 +888,7 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
     override fun onTimelineFailure(throwable: Throwable) {
         // If we have a critical timeline issue, we get back to live.
         timeline.restartWithEventId(null)
-        _viewEvents.post(RoomDetailViewEvents.Failure(throwable))
+        _viewEvents.post(CommonViewEvents.Failure(throwable))
     }
 
     override fun onCleared() {

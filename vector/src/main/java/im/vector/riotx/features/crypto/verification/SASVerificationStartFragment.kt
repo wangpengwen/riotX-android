@@ -30,6 +30,8 @@ import im.vector.matrix.android.api.session.crypto.sas.OutgoingSasVerificationRe
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseActivity
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class SASVerificationStartFragment @Inject constructor(): VectorBaseFragment() {
@@ -80,6 +82,8 @@ class SASVerificationStartFragment @Inject constructor(): VectorBaseFragment() {
             }
         })
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.sas_start_button)
     fun doStart() {

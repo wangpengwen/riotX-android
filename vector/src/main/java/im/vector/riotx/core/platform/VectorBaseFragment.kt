@@ -45,7 +45,10 @@ import im.vector.riotx.core.di.DaggerScreenComponent
 import im.vector.riotx.core.di.HasScreenInjector
 import im.vector.riotx.core.di.ScreenComponent
 import im.vector.riotx.core.error.ErrorFormatter
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.navigation.Navigator
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -124,7 +127,30 @@ abstract class VectorBaseFragment : BaseMvRxFragment(), HasScreenInjector {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mUnBinder = ButterKnife.bind(this, view)
+
+        getCommonViewEvent()?.let {
+            it.observe()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        dismissLoadingDialog()
+                        when (it) {
+                            is CommonViewEvents.Loading -> showLoading(it.message)
+                            is CommonViewEvents.Failure -> showFailure(it.throwable)
+                        }
+                    }
+                    .disposeOnDestroyView()
+        }
     }
+
+    open fun showLoading(message: CharSequence?) {
+        showLoadingDialog(message)
+    }
+
+    open fun showFailure(throwable: Throwable) {
+        displayErrorDialog(throwable)
+    }
+
+    abstract fun getCommonViewEvent(): DataSource<CommonViewEvents>?
 
     @CallSuper
     override fun onDestroyView() {
@@ -188,10 +214,10 @@ abstract class VectorBaseFragment : BaseMvRxFragment(), HasScreenInjector {
         }
     }
 
-    protected fun showLoadingDialog(message: CharSequence, cancelable: Boolean = false) {
+    protected fun showLoadingDialog(message: CharSequence? = null, cancelable: Boolean = false) {
         progress = ProgressDialog(requireContext()).apply {
             setCancelable(cancelable)
-            setMessage(message)
+            setMessage(message ?: getString(R.string.please_wait))
             setProgressStyle(ProgressDialog.STYLE_SPINNER)
             show()
         }

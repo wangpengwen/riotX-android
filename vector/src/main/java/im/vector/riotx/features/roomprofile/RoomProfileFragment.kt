@@ -33,6 +33,8 @@ import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.extensions.setTextOrHide
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.AvatarRenderer
 import im.vector.riotx.features.home.room.list.actions.RoomListActionsArgs
 import im.vector.riotx.features.home.room.list.actions.RoomListQuickActionsBottomSheet
@@ -77,14 +79,12 @@ class RoomProfileFragment @Inject constructor(
         appBarStateChangeListener = MatrixItemAppBarStateChangeListener(headerView, listOf(matrixProfileToolbarAvatarImageView,
                 matrixProfileToolbarTitleView))
         matrixProfileAppBarLayout.addOnOffsetChangedListener(appBarStateChangeListener)
-        roomProfileViewModel.viewEvents
+        roomProfileViewModel.profileViewEvents
                 .observe()
                 .subscribe {
                     dismissLoadingDialog()
                     when (it) {
-                        is RoomProfileViewEvents.Loading         -> showLoadingDialog(it.message)
                         RoomProfileViewEvents.OnLeaveRoomSuccess -> onLeaveRoom()
-                        is RoomProfileViewEvents.Failure         -> showError(it.throwable)
                     }
                 }
                 .disposeOnDestroyView()
@@ -93,6 +93,8 @@ class RoomProfileFragment @Inject constructor(
                 .subscribe { handleQuickActions(it) }
                 .disposeOnDestroyView()
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = roomProfileViewModel.viewEvents
 
     private fun handleQuickActions(action: RoomListQuickActionsSharedAction) = when (action) {
         is RoomListQuickActionsSharedAction.NotificationsAllNoisy     -> {

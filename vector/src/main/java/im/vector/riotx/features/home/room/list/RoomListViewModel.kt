@@ -27,6 +27,7 @@ import im.vector.matrix.android.api.session.room.model.tag.RoomTag
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,8 +53,8 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
     private val displayMode = initialState.displayMode
     private val roomListDisplayModeFilter = RoomListDisplayModeFilter(displayMode)
 
-    private val _viewEvents = PublishDataSource<RoomListViewEvents>()
-    val viewEvents: DataSource<RoomListViewEvents> = _viewEvents
+    private val _roomListviewEvents = PublishDataSource<RoomListViewEvents>()
+    val roomListviewEvents: DataSource<RoomListViewEvents> = _roomListviewEvents
 
     init {
         observeRoomSummaries()
@@ -75,7 +76,7 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
     // PRIVATE METHODS *****************************************************************************
 
     private fun handleSelectRoom(action: RoomListAction.SelectRoom) {
-        _viewEvents.post(RoomListViewEvents.SelectRoom(action.roomSummary.roomId))
+        _roomListviewEvents.post(RoomListViewEvents.SelectRoom(action.roomSummary.roomId))
     }
 
     private fun handleToggleCategory(action: RoomListAction.ToggleCategory) = setState {
@@ -131,7 +132,7 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
 
             override fun onFailure(failure: Throwable) {
                 // Notify the user
-                _viewEvents.post(RoomListViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
                 setState {
                     copy(
                             joiningRoomsIds = joiningRoomsIds - roomId,
@@ -168,7 +169,7 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
 
             override fun onFailure(failure: Throwable) {
                 // Notify the user
-                _viewEvents.post(RoomListViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
                 setState {
                     copy(
                             rejectingRoomsIds = rejectingRoomsIds - roomId,
@@ -191,15 +192,16 @@ class RoomListViewModel @Inject constructor(initialState: RoomListViewState,
     private fun handleChangeNotificationMode(action: RoomListAction.ChangeRoomNotificationState) {
         session.getRoom(action.roomId)?.setRoomNotificationState(action.notificationState, object : MatrixCallback<Unit> {
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(RoomListViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }
 
     private fun handleLeaveRoom(action: RoomListAction.LeaveRoom) {
+        _viewEvents.post(CommonViewEvents.Loading(null))
         session.getRoom(action.roomId)?.leave(null, object : MatrixCallback<Unit> {
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(RoomListViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }

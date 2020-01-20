@@ -30,6 +30,8 @@ import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.extensions.observeEvent
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_public_rooms.*
 import timber.log.Timber
@@ -75,11 +77,14 @@ class PublicRoomsFragment @Inject constructor(
             sharedActionViewModel.post(RoomDirectorySharedAction.CreateRoom)
         }
 
+        // TODO remove this
         viewModel.joinRoomErrorLiveData.observeEvent(this) { throwable ->
             Snackbar.make(publicRoomsCoordinator, errorFormatter.toHumanReadable(throwable), Snackbar.LENGTH_SHORT)
                     .show()
         }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         publicRoomsController.callback = null

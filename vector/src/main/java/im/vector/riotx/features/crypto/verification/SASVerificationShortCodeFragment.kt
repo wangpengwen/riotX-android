@@ -27,6 +27,8 @@ import im.vector.matrix.android.api.session.crypto.sas.IncomingSasVerificationTr
 import im.vector.matrix.android.api.session.crypto.sas.OutgoingSasVerificationRequest
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class SASVerificationShortCodeFragment @Inject constructor(): VectorBaseFragment() {
@@ -156,6 +158,8 @@ class SASVerificationShortCodeFragment @Inject constructor(): VectorBaseFragment
             }
         })
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.sas_request_continue_button)
     fun didAccept() {

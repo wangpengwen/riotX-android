@@ -27,6 +27,8 @@ import im.vector.riotx.core.platform.VectorBaseActivity
 import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.core.resources.StringProvider
 import im.vector.riotx.core.ui.list.genericFooterItem
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_generic_recycler.*
 
 // Referenced in vector_settings_notifications.xml
@@ -47,6 +49,8 @@ class PushRulesFragment : VectorBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.configureWith(epoxyController, showDivider = true)
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         recyclerView.cleanup()

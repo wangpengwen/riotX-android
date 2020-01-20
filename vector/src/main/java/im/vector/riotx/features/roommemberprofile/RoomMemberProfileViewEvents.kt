@@ -20,7 +20,5 @@ package im.vector.riotx.features.roommemberprofile
  * Transient events for RoomMemberProfile
  */
 sealed class RoomMemberProfileViewEvents {
-    data class Loading(val message: CharSequence) : RoomMemberProfileViewEvents()
     object OnIgnoreActionSuccess : RoomMemberProfileViewEvents()
-    data class Failure(val throwable: Throwable) : RoomMemberProfileViewEvents()
 }

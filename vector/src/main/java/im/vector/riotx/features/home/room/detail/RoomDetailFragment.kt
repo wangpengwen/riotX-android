@@ -94,6 +94,7 @@ import im.vector.riotx.core.glide.GlideApp
 import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.core.ui.views.JumpToReadMarkerView
 import im.vector.riotx.core.ui.views.NotificationAreaView
+import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.Debouncer
 import im.vector.riotx.core.utils.KeyboardStateUtils
 import im.vector.riotx.core.utils.PERMISSIONS_FOR_WRITING_FILES
@@ -109,6 +110,7 @@ import im.vector.riotx.core.utils.getColorFromUserId
 import im.vector.riotx.core.utils.openUrlInExternalBrowser
 import im.vector.riotx.core.utils.shareMedia
 import im.vector.riotx.core.utils.toast
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.attachments.AttachmentTypeSelectorView
 import im.vector.riotx.features.attachments.AttachmentsHelper
 import im.vector.riotx.features.attachments.ContactAttachment
@@ -305,16 +307,12 @@ class RoomDetailFragment @Inject constructor(
         roomDetailViewModel.requestLiveData.observeEvent(this) {
             displayRoomDetailActionResult(it)
         }
+    }
 
-        roomDetailViewModel.viewEvents
-                .observe()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    when (it) {
-                        is RoomDetailViewEvents.Failure -> showErrorInSnackbar(it.throwable)
-                    }
-                }
-                .disposeOnDestroyView()
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = roomDetailViewModel.viewEvents
+
+    override fun showFailure(throwable: Throwable) {
+        showErrorInSnackbar(throwable)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

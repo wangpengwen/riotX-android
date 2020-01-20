@@ -43,6 +43,7 @@ import im.vector.riotx.core.extensions.configureAndStart
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.notifications.PushRuleTriggerListener
 import im.vector.riotx.features.session.SessionListener
 import im.vector.riotx.features.signout.soft.SoftLogoutActivity
@@ -95,8 +96,8 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
 
     private var currentTask: Cancelable? = null
 
-    private val _viewEvents = PublishDataSource<LoginViewEvents>()
-    val viewEvents: DataSource<LoginViewEvents> = _viewEvents
+    private val _loginViewEvents = PublishDataSource<LoginViewEvents>()
+    val loginViewEvents: DataSource<LoginViewEvents> = _loginViewEvents
 
     override fun handle(action: LoginAction) {
         when (action) {
@@ -179,7 +180,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
 
         override fun onFailure(failure: Throwable) {
             if (failure !is CancellationException) {
-                _viewEvents.post(LoginViewEvents.Error(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
             setState {
                 copy(
@@ -201,7 +202,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
             }
 
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(LoginViewEvents.Error(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
                 setState {
                     copy(
                             asyncRegistration = Uninitialized
@@ -223,7 +224,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
             }
 
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(LoginViewEvents.Error(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
                 setState {
                     copy(
                             asyncRegistration = Uninitialized
@@ -488,7 +489,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
             handleRegisterDummy()
         } else {
             // Notify the user
-            _viewEvents.post(LoginViewEvents.RegistrationFlowResult(flowResult, isRegistrationStarted))
+            _loginViewEvents.post(LoginViewEvents.RegistrationFlowResult(flowResult, isRegistrationStarted))
         }
     }
 
@@ -526,7 +527,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
 
         if (homeServerConnectionConfig == null) {
             // This is invalid
-            _viewEvents.post(LoginViewEvents.Error(Throwable("Unable to create a HomeServerConnectionConfig")))
+            _viewEvents.post(CommonViewEvents.Failure(Throwable("Unable to create a HomeServerConnectionConfig")))
         } else {
             currentTask?.cancel()
             currentTask = null
@@ -540,7 +541,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
 
             currentTask = authenticationService.getLoginFlow(homeServerConnectionConfig, object : MatrixCallback<LoginFlowResult> {
                 override fun onFailure(failure: Throwable) {
-                    _viewEvents.post(LoginViewEvents.Error(failure))
+                    _viewEvents.post(CommonViewEvents.Failure(failure))
                     setState {
                         copy(
                                 asyncHomeServerLoginFlowRequest = Uninitialized
@@ -579,7 +580,7 @@ class LoginViewModel @AssistedInject constructor(@Assisted initialState: LoginVi
 
                 private fun notSupported() {
                     // Notify the UI
-                    _viewEvents.post(LoginViewEvents.OutdatedHomeserver)
+                    _loginViewEvents.post(LoginViewEvents.OutdatedHomeserver)
 
                     setState {
                         copy(

@@ -18,7 +18,15 @@ package im.vector.riotx.features.settings.devices
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.FragmentViewModelContext
+import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
+import com.airbnb.mvrx.ViewModelContext
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import im.vector.matrix.android.api.MatrixCallback
@@ -31,12 +39,14 @@ import im.vector.riotx.core.extensions.postLiveEvent
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.platform.VectorViewModelAction
 import im.vector.riotx.core.utils.LiveEvent
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import timber.log.Timber
 
 data class DevicesViewState(
         val myDeviceId: String = "",
         val devices: Async<List<DeviceInfo>> = Uninitialized,
         val currentExpandedDeviceId: String? = null,
+        // TODO Replace by isLoading boolean
         val request: Async<Unit> = Uninitialized
 ) : MvRxState
 
@@ -153,7 +163,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                     )
                 }
 
-                _requestErrorLiveData.postLiveEvent(failure)
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }
@@ -207,7 +217,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                         )
                     }
 
-                    _requestErrorLiveData.postLiveEvent(failure)
+                    _viewEvents.post(CommonViewEvents.Failure(failure))
                 }
             }
 
@@ -261,7 +271,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                     )
                 }
 
-                _requestErrorLiveData.postLiveEvent(failure)
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }

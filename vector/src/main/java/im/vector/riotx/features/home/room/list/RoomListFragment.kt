@@ -27,7 +27,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.OnModelBuildFinishedListener
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.Incomplete
+import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
 import im.vector.matrix.android.api.failure.Failure
 import im.vector.matrix.android.api.session.room.model.Membership
 import im.vector.matrix.android.api.session.room.model.RoomSummary
@@ -38,6 +42,8 @@ import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.platform.OnBackPressed
 import im.vector.riotx.core.platform.StateView
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.RoomListDisplayMode
 import im.vector.riotx.features.home.room.list.actions.RoomListActionsArgs
 import im.vector.riotx.features.home.room.list.actions.RoomListQuickActionsBottomSheet
@@ -98,13 +104,12 @@ class RoomListFragment @Inject constructor(
         setupRecyclerView()
         sharedActionViewModel = activityViewModelProvider.get(RoomListQuickActionsSharedActionViewModel::class.java)
         roomListViewModel.subscribe { renderState(it) }
-        roomListViewModel.viewEvents
+        roomListViewModel.roomListviewEvents
                 .observe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     when (it) {
                         is RoomListViewEvents.SelectRoom -> openSelectedRoom(it)
-                        is RoomListViewEvents.Failure    -> showErrorInSnackbar(it.throwable)
                     }
                 }
                 .disposeOnDestroyView()
@@ -115,6 +120,12 @@ class RoomListFragment @Inject constructor(
                 .observe()
                 .subscribe { handleQuickActions(it) }
                 .disposeOnDestroyView()
+    }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = roomListViewModel.viewEvents
+
+    override fun showFailure(throwable: Throwable) {
+        showErrorInSnackbar(throwable)
     }
 
     override fun onDestroyView() {

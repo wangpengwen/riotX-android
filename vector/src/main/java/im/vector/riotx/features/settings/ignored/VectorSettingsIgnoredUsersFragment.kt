@@ -27,9 +27,10 @@ import com.airbnb.mvrx.withState
 import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
-import im.vector.riotx.core.extensions.observeEvent
 import im.vector.riotx.core.platform.VectorBaseActivity
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_generic_recycler.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class VectorSettingsIgnoredUsersFragment @Inject constructor(
 
     override fun getLayoutResId() = R.layout.fragment_generic_recycler
 
-    private val ignoredUsersViewModel: IgnoredUsersViewModel by fragmentViewModel()
+    private val viewModel: IgnoredUsersViewModel by fragmentViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,10 +51,9 @@ class VectorSettingsIgnoredUsersFragment @Inject constructor(
         waiting_view_status_text.isVisible = true
         ignoredUsersController.callback = this
         recyclerView.configureWith(ignoredUsersController)
-        ignoredUsersViewModel.requestErrorLiveData.observeEvent(this) {
-            displayErrorDialog(it)
-        }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         ignoredUsersController.callback = null
@@ -71,7 +71,7 @@ class VectorSettingsIgnoredUsersFragment @Inject constructor(
         AlertDialog.Builder(requireActivity())
                 .setMessage(getString(R.string.settings_unignore_user, userId))
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    ignoredUsersViewModel.handle(IgnoredUsersAction.UnIgnore(userId))
+                    viewModel.handle(IgnoredUsersAction.UnIgnore(userId))
                 }
                 .setNegativeButton(R.string.no, null)
                 .show()
@@ -81,7 +81,7 @@ class VectorSettingsIgnoredUsersFragment @Inject constructor(
     // ignored users list management
     // ==============================================================================================================
 
-    override fun invalidate() = withState(ignoredUsersViewModel) { state ->
+    override fun invalidate() = withState(viewModel) { state ->
         ignoredUsersController.update(state)
 
         handleUnIgnoreRequestStatus(state.unIgnoreRequest)

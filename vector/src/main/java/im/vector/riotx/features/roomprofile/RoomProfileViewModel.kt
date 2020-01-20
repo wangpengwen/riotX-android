@@ -31,6 +31,7 @@ import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.resources.StringProvider
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 
 class RoomProfileViewModel @AssistedInject constructor(@Assisted initialState: RoomProfileViewState,
                                                        private val stringProvider: StringProvider,
@@ -51,8 +52,8 @@ class RoomProfileViewModel @AssistedInject constructor(@Assisted initialState: R
         }
     }
 
-    private val _viewEvents = PublishDataSource<RoomProfileViewEvents>()
-    val viewEvents: DataSource<RoomProfileViewEvents> = _viewEvents
+    private val _profileViewEvents = PublishDataSource<RoomProfileViewEvents>()
+    val profileViewEvents: DataSource<RoomProfileViewEvents> = _profileViewEvents
 
     private val room = session.getRoom(initialState.roomId)!!
 
@@ -76,20 +77,20 @@ class RoomProfileViewModel @AssistedInject constructor(@Assisted initialState: R
     private fun handleChangeNotificationMode(action: RoomProfileAction.ChangeRoomNotificationState) {
         room.setRoomNotificationState(action.notificationState, object : MatrixCallback<Unit> {
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(RoomProfileViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }
 
     private fun handleLeaveRoom() {
-        _viewEvents.post(RoomProfileViewEvents.Loading(stringProvider.getString(R.string.room_profile_leaving_room)))
+        _viewEvents.post(CommonViewEvents.Loading(stringProvider.getString(R.string.room_profile_leaving_room)))
         room.leave(null, object : MatrixCallback<Unit> {
             override fun onSuccess(data: Unit) {
-                _viewEvents.post(RoomProfileViewEvents.OnLeaveRoomSuccess)
+                _profileViewEvents.post(RoomProfileViewEvents.OnLeaveRoomSuccess)
             }
 
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(RoomProfileViewEvents.Failure(failure))
+                _viewEvents.post(CommonViewEvents.Failure(failure))
             }
         })
     }

@@ -16,7 +16,13 @@
 
 package im.vector.riotx.features.signout.soft
 
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.ActivityViewModelContext
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
+import com.airbnb.mvrx.ViewModelContext
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import im.vector.matrix.android.api.MatrixCallback
@@ -30,6 +36,7 @@ import im.vector.riotx.core.extensions.hasUnsavedKeys
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.login.LoginMode
 import timber.log.Timber
 
@@ -71,8 +78,8 @@ class SoftLogoutViewModel @AssistedInject constructor(
 
     private var currentTask: Cancelable? = null
 
-    private val _viewEvents = PublishDataSource<SoftLogoutViewEvents>()
-    val viewEvents: DataSource<SoftLogoutViewEvents> = _viewEvents
+    private val _softLogoutViewEvents = PublishDataSource<SoftLogoutViewEvents>()
+    val softLogoutViewEvents: DataSource<SoftLogoutViewEvents> = _softLogoutViewEvents
 
     init {
         // Get the supported login flow
@@ -152,7 +159,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
 
     private fun handleClearData() {
         // Notify the Activity
-        _viewEvents.post(SoftLogoutViewEvents.ClearData)
+        _softLogoutViewEvents.post(SoftLogoutViewEvents.ClearData)
     }
 
     private fun handlePasswordChange(action: SoftLogoutAction.PasswordChanged) {
@@ -180,7 +187,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
         withState { softLogoutViewState ->
             if (softLogoutViewState.userId != action.credentials.userId) {
                 Timber.w("User login again with SSO, but using another account")
-                _viewEvents.post(SoftLogoutViewEvents.ErrorNotSameUser(
+                _softLogoutViewEvents.post(SoftLogoutViewEvents.ErrorNotSameUser(
                         softLogoutViewState.userId,
                         action.credentials.userId))
             } else {
@@ -192,7 +199,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
                 currentTask = session.updateCredentials(action.credentials,
                         object : MatrixCallback<Unit> {
                             override fun onFailure(failure: Throwable) {
-                                _viewEvents.post(SoftLogoutViewEvents.Error(failure))
+                                _viewEvents.post(CommonViewEvents.Failure(failure))
                                 setState {
                                     copy(
                                             asyncLoginAction = Uninitialized

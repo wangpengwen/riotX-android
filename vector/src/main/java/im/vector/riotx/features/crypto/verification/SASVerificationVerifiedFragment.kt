@@ -19,6 +19,8 @@ import android.os.Bundle
 import butterknife.OnClick
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class SASVerificationVerifiedFragment @Inject constructor() : VectorBaseFragment() {
@@ -32,6 +34,8 @@ class SASVerificationVerifiedFragment @Inject constructor() : VectorBaseFragment
 
         viewModel = activityViewModelProvider.get(SasVerificationViewModel::class.java)
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.sas_verification_verified_done_button)
     fun onDone() {

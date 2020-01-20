@@ -62,7 +62,7 @@ class SoftLogoutActivity : LoginActivity() {
                     updateWithState(it)
                 }
 
-        softLogoutViewModel.viewEvents
+        softLogoutViewModel.softLogoutViewEvents
                 .observe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -73,8 +73,6 @@ class SoftLogoutActivity : LoginActivity() {
 
     private fun handleSoftLogoutViewEvents(softLogoutViewEvents: SoftLogoutViewEvents) {
         when (softLogoutViewEvents) {
-            is SoftLogoutViewEvents.Error            ->
-                showError(errorFormatter.toHumanReadable(softLogoutViewEvents.throwable))
             is SoftLogoutViewEvents.ErrorNotSameUser -> {
                 // Pop the backstack
                 supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

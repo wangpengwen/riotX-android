@@ -26,6 +26,8 @@ import im.vector.matrix.android.api.util.MatrixItem
 import im.vector.matrix.android.api.util.toMatrixItem
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.AvatarRenderer
 import javax.inject.Inject
 
@@ -86,6 +88,8 @@ class SASVerificationIncomingFragment @Inject constructor(
             }
         })
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.sas_request_continue_button)
     fun didAccept() {

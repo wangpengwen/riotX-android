@@ -34,6 +34,8 @@ import im.vector.riotx.core.glide.GlideApp
 import im.vector.riotx.core.platform.ToolbarConfigurable
 import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.core.ui.views.KeysBackupBanner
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.room.list.RoomListFragment
 import im.vector.riotx.features.home.room.list.RoomListParams
 import im.vector.riotx.features.home.room.list.UnreadCounterBadgeView
@@ -78,6 +80,8 @@ class HomeDetailFragment @Inject constructor(
             switchDisplayMode(displayMode)
         }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     private fun onGroupChange(groupSummary: GroupSummary?) {
         groupSummary?.let {

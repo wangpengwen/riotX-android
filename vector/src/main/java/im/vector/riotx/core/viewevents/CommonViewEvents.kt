@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package im.vector.riotx.features.home.room.detail
+package im.vector.riotx.core.viewevents
 
 /**
- * Transient events for RoomDetail
+ * Generic transient events
  */
-sealed class RoomDetailViewEvents {
-    data class Failure(val throwable: Throwable) : RoomDetailViewEvents()
+sealed class CommonViewEvents {
+    data class Loading(val message: CharSequence? = null) : CommonViewEvents()
+    data class Failure(val throwable: Throwable) : CommonViewEvents()
 }

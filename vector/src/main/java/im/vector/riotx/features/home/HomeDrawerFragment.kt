@@ -24,6 +24,8 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.observeK
 import im.vector.riotx.core.extensions.replaceChildFragment
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.grouplist.GroupListFragment
 import kotlinx.android.synthetic.main.fragment_home_drawer.*
 import javax.inject.Inject
@@ -57,4 +59,6 @@ class HomeDrawerFragment @Inject constructor(
             navigator.openDebug(requireActivity())
         }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 }

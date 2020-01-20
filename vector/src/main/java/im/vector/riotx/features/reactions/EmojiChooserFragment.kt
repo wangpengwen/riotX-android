@@ -21,6 +21,8 @@ import androidx.lifecycle.observe
 import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.emoji_chooser_fragment.*
 import javax.inject.Inject
 
@@ -47,6 +49,8 @@ class EmojiChooserFragment @Inject constructor(
             emojiRecyclerAdapter.scrollToSection(section)
         }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     override fun firstVisibleSectionChange(section: Int) {
         viewModel.setCurrentSection(section)

@@ -21,6 +21,5 @@ package im.vector.riotx.features.home.room.list
  * Transient events for RoomList
  */
 sealed class RoomListViewEvents {
-    data class Failure(val throwable: Throwable) : RoomListViewEvents()
     data class SelectRoom(val roomId: String) : RoomListViewEvents()
 }

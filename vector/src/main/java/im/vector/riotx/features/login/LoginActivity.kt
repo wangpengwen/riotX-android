@@ -111,7 +111,7 @@ open class LoginActivity : VectorBaseActivity(), ToolbarConfigurable {
                     updateWithState(it)
                 }
 
-        loginViewModel.viewEvents
+        loginViewModel.loginViewEvents
                 .observe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -209,9 +209,6 @@ open class LoginActivity : VectorBaseActivity(), ToolbarConfigurable {
                         .setMessage(R.string.login_error_outdated_homeserver_content)
                         .setPositiveButton(R.string.ok, null)
                         .show()
-            is LoginViewEvents.Error                  ->
-                // This is handled by the Fragments
-                Unit
         }
     }
 

@@ -25,7 +25,9 @@ import butterknife.BindView
 import butterknife.OnClick
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.LiveEvent
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class KeysBackupSetupStep1Fragment @Inject constructor() : VectorBaseFragment() {
@@ -52,6 +54,8 @@ class KeysBackupSetupStep1Fragment @Inject constructor() : VectorBaseFragment() 
             manualExportButton.visibility = if (showOption) View.VISIBLE else View.GONE
         })
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.keys_backup_setup_step1_button)
     fun onButtonClick() {

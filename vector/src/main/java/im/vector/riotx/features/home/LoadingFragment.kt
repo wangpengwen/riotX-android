@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.view.View
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
+import im.vector.riotx.core.utils.DataSource
+import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_loading.*
 import javax.inject.Inject
 
@@ -36,4 +38,6 @@ class LoadingFragment @Inject constructor(): VectorBaseFragment() {
             background.start()
         }
     }
+
+    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 }
