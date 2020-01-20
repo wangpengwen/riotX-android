@@ -32,8 +32,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.showPassword
 import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.core.ui.views.PasswordStrengthBar
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.settings.VectorLocale
 import javax.inject.Inject
 
@@ -85,8 +83,6 @@ class KeysBackupSetupStep2Fragment @Inject constructor() : VectorBaseFragment() 
         viewModel.shouldPromptOnBack = true
         bindViewToViewModel()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     /* ==========================================================================================
      * MENU

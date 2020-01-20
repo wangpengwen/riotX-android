@@ -33,7 +33,6 @@ import im.vector.riotx.core.files.addEntryToDownloadManager
 import im.vector.riotx.core.files.writeToFile
 import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.core.utils.*
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -84,8 +83,6 @@ class KeysBackupSetupStep3Fragment @Inject constructor() : VectorBaseFragment() 
             }
         })
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnClick(R.id.keys_backup_setup_step3_button)
     fun onFinishButtonClicked() {

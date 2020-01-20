@@ -39,11 +39,10 @@ import im.vector.matrix.android.api.session.room.notification.RoomNotificationSt
 import im.vector.riotx.R
 import im.vector.riotx.core.epoxy.LayoutManagerStateRestorer
 import im.vector.riotx.core.extensions.cleanup
+import im.vector.riotx.core.extensions.exhaustive
 import im.vector.riotx.core.platform.OnBackPressed
 import im.vector.riotx.core.platform.StateView
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.RoomListDisplayMode
 import im.vector.riotx.features.home.room.list.actions.RoomListActionsArgs
 import im.vector.riotx.features.home.room.list.actions.RoomListQuickActionsBottomSheet
@@ -52,7 +51,6 @@ import im.vector.riotx.features.home.room.list.actions.RoomListQuickActionsShare
 import im.vector.riotx.features.home.room.list.widget.FabMenuView
 import im.vector.riotx.features.notifications.NotificationDrawerManager
 import im.vector.riotx.features.share.SharedData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_room_list.*
 import javax.inject.Inject
@@ -104,16 +102,12 @@ class RoomListFragment @Inject constructor(
         setupRecyclerView()
         sharedActionViewModel = activityViewModelProvider.get(RoomListQuickActionsSharedActionViewModel::class.java)
         roomListViewModel.subscribe { renderState(it) }
-        roomListViewModel.roomListviewEvents
-                .observe()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+        roomListViewModel.viewEvents
+                .subscribeViewEvents<RoomListViewEvents> {
                     when (it) {
                         is RoomListViewEvents.SelectRoom -> openSelectedRoom(it)
-                    }
+                    }.exhaustive
                 }
-                .disposeOnDestroyView()
-
         createChatFabMenu.listener = this
 
         sharedActionViewModel
@@ -121,8 +115,6 @@ class RoomListFragment @Inject constructor(
                 .subscribe { handleQuickActions(it) }
                 .disposeOnDestroyView()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = roomListViewModel.viewEvents
 
     override fun showFailure(throwable: Throwable) {
         showErrorInSnackbar(throwable)

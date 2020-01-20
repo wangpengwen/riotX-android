@@ -27,8 +27,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.roomdirectory.RoomDirectoryAction
 import im.vector.riotx.features.roomdirectory.RoomDirectorySharedAction
 import im.vector.riotx.features.roomdirectory.RoomDirectorySharedActionViewModel
@@ -62,8 +60,6 @@ class RoomDirectoryPickerFragment @Inject constructor(val roomDirectoryPickerVie
         sharedActionViewModel = activityViewModelProvider.get(RoomDirectorySharedActionViewModel::class.java)
         setupRecyclerView()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         roomDirectoryPickerList.cleanup()

@@ -27,8 +27,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.setTextOrHide
 import im.vector.riotx.core.platform.ButtonStateView
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.AvatarRenderer
 import im.vector.riotx.features.roomdirectory.JoinState
 import kotlinx.android.synthetic.main.fragment_room_preview_no_preview.*
@@ -76,8 +74,6 @@ class RoomPreviewNoPreviewFragment @Inject constructor(
             }
         }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     override fun invalidate() = withState(roomPreviewViewModel) { state ->
         TransitionManager.beginDelayedTransition(roomPreviewNoPreviewRoot)

@@ -29,8 +29,6 @@ import im.vector.riotx.core.extensions.hideKeyboard
 import im.vector.riotx.core.extensions.setupAsSearch
 import im.vector.riotx.core.extensions.showKeyboard
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_create_direct_room_directory_users.*
 import javax.inject.Inject
 
@@ -51,8 +49,6 @@ class CreateDirectRoomDirectoryUsersFragment @Inject constructor(
         setupSearchByMatrixIdView()
         setupCloseView()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         recyclerView.cleanup()

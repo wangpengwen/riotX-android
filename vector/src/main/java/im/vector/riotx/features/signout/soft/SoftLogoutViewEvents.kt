@@ -17,10 +17,12 @@
 
 package im.vector.riotx.features.signout.soft
 
+import im.vector.riotx.core.viewevents.VectorViewEvents
+
 /**
  * Transient events for SoftLogout
  */
-sealed class SoftLogoutViewEvents {
+sealed class SoftLogoutViewEvents: VectorViewEvents.FeatureViewEvents() {
     data class ErrorNotSameUser(val currentUserId: String, val newUserId: String) : SoftLogoutViewEvents()
     object ClearData : SoftLogoutViewEvents()
 }

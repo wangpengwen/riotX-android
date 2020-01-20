@@ -28,9 +28,7 @@ import butterknife.OnTextChanged
 import com.google.android.material.textfield.TextInputLayout
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.startImportTextFromFileIntent
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -70,8 +68,6 @@ class KeysBackupRestoreFromKeyFragment @Inject constructor()
             mKeyInputLayout.error = newValue
         })
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     @OnTextChanged(R.id.keys_restore_key_enter_edittext)
     fun onRestoreKeyTextEditChange(s: Editable?) {

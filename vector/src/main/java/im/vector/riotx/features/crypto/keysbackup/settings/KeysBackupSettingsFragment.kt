@@ -24,8 +24,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.crypto.keysbackup.restore.KeysBackupRestoreActivity
 import im.vector.riotx.features.crypto.keysbackup.setup.KeysBackupSetupActivity
 import kotlinx.android.synthetic.main.fragment_keys_backup_settings.*
@@ -44,8 +42,6 @@ class KeysBackupSettingsFragment @Inject constructor(private val keysBackupSetti
         keysBackupSettingsRecyclerView.configureWith(keysBackupSettingsRecyclerViewController)
         keysBackupSettingsRecyclerViewController.listener = this
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         keysBackupSettingsRecyclerViewController.listener = null

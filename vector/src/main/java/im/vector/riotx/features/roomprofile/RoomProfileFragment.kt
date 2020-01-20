@@ -31,10 +31,9 @@ import im.vector.riotx.core.animations.AppBarStateChangeListener
 import im.vector.riotx.core.animations.MatrixItemAppBarStateChangeListener
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
+import im.vector.riotx.core.extensions.exhaustive
 import im.vector.riotx.core.extensions.setTextOrHide
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.AvatarRenderer
 import im.vector.riotx.features.home.room.list.actions.RoomListActionsArgs
 import im.vector.riotx.features.home.room.list.actions.RoomListQuickActionsBottomSheet
@@ -79,22 +78,17 @@ class RoomProfileFragment @Inject constructor(
         appBarStateChangeListener = MatrixItemAppBarStateChangeListener(headerView, listOf(matrixProfileToolbarAvatarImageView,
                 matrixProfileToolbarTitleView))
         matrixProfileAppBarLayout.addOnOffsetChangedListener(appBarStateChangeListener)
-        roomProfileViewModel.profileViewEvents
-                .observe()
-                .subscribe {
-                    dismissLoadingDialog()
+        roomProfileViewModel.viewEvents
+                .subscribeViewEvents<RoomProfileViewEvents> {
                     when (it) {
-                        RoomProfileViewEvents.OnLeaveRoomSuccess -> onLeaveRoom()
-                    }
+                        is RoomProfileViewEvents.OnLeaveRoomSuccess -> onLeaveRoom()
+                    }.exhaustive
                 }
-                .disposeOnDestroyView()
         roomListQuickActionsSharedActionViewModel
                 .observe()
                 .subscribe { handleQuickActions(it) }
                 .disposeOnDestroyView()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = roomProfileViewModel.viewEvents
 
     private fun handleQuickActions(action: RoomListQuickActionsSharedAction) = when (action) {
         is RoomListQuickActionsSharedAction.NotificationsAllNoisy     -> {

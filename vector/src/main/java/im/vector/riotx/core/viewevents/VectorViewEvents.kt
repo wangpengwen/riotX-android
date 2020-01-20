@@ -19,7 +19,10 @@ package im.vector.riotx.core.viewevents
 /**
  * Generic transient events
  */
-sealed class CommonViewEvents {
-    data class Loading(val message: CharSequence? = null) : CommonViewEvents()
-    data class Failure(val throwable: Throwable) : CommonViewEvents()
+sealed class VectorViewEvents {
+    data class Loading(val message: CharSequence? = null) : VectorViewEvents()
+    data class Failure(val throwable: Throwable) : VectorViewEvents()
+
+    abstract class FeatureViewEvents: VectorViewEvents()
+
 }

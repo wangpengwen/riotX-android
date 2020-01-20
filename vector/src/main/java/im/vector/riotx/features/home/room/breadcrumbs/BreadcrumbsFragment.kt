@@ -23,8 +23,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.room.detail.RoomDetailSharedAction
 import im.vector.riotx.features.home.room.detail.RoomDetailSharedActionViewModel
 import kotlinx.android.synthetic.main.fragment_breadcrumbs.*
@@ -47,8 +45,6 @@ class BreadcrumbsFragment @Inject constructor(
 
         breadcrumbsViewModel.subscribe { renderState(it) }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     override fun onDestroyView() {
         breadcrumbsRecyclerView.cleanup()

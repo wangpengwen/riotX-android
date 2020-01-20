@@ -16,9 +16,11 @@
 
 package im.vector.riotx.features.roommemberprofile
 
+import im.vector.riotx.core.viewevents.VectorViewEvents
+
 /**
  * Transient events for RoomMemberProfile
  */
-sealed class RoomMemberProfileViewEvents {
+sealed class RoomMemberProfileViewEvents: VectorViewEvents.FeatureViewEvents() {
     object OnIgnoreActionSuccess : RoomMemberProfileViewEvents()
 }

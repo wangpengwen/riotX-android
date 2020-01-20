@@ -17,9 +17,11 @@
 
 package im.vector.riotx.features.home.room.list
 
+import im.vector.riotx.core.viewevents.VectorViewEvents
+
 /**
  * Transient events for RoomList
  */
-sealed class RoomListViewEvents {
+sealed class RoomListViewEvents: VectorViewEvents.FeatureViewEvents() {
     data class SelectRoom(val roomId: String) : RoomListViewEvents()
 }

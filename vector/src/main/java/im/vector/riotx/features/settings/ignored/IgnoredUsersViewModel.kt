@@ -33,7 +33,7 @@ import im.vector.matrix.android.api.session.user.model.User
 import im.vector.matrix.rx.rx
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.platform.VectorViewModelAction
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 
 data class IgnoredUsersViewState(
         val ignoredUsers: List<User> = emptyList(),
@@ -97,7 +97,7 @@ class IgnoredUsersViewModel @AssistedInject constructor(@Assisted initialState: 
                     )
                 }
 
-                _viewEvents.post(CommonViewEvents.Failure(failure))
+                _viewEvents.post(VectorViewEvents.Failure(failure))
             }
 
             override fun onSuccess(data: Unit) {

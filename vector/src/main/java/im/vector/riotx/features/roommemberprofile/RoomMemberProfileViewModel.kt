@@ -46,7 +46,7 @@ import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.resources.StringProvider
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.Dispatchers
@@ -71,9 +71,6 @@ class RoomMemberProfileViewModel @AssistedInject constructor(@Assisted private v
             return fragment.viewModelFactory.create(state)
         }
     }
-
-    private val _roomMemberProfileviewEvents = PublishDataSource<RoomMemberProfileViewEvents>()
-    val roomMemberProfileviewEvents: DataSource<RoomMemberProfileViewEvents> = _roomMemberProfileviewEvents
 
     private val room = if (initialState.roomId != null) {
         session.getRoom(initialState.roomId)
@@ -184,14 +181,14 @@ class RoomMemberProfileViewModel @AssistedInject constructor(@Assisted private v
 
     private fun handleIgnoreAction() = withState { state ->
         val isIgnored = state.isIgnored() ?: return@withState
-        _viewEvents.post(CommonViewEvents.Loading())
+        _viewEvents.post(VectorViewEvents.Loading())
         val ignoreActionCallback = object : MatrixCallback<Unit> {
             override fun onSuccess(data: Unit) {
-                _roomMemberProfileviewEvents.post(RoomMemberProfileViewEvents.OnIgnoreActionSuccess)
+                _viewEvents.post(RoomMemberProfileViewEvents.OnIgnoreActionSuccess)
             }
 
             override fun onFailure(failure: Throwable) {
-                _viewEvents.post(CommonViewEvents.Failure(failure))
+                _viewEvents.post(VectorViewEvents.Failure(failure))
             }
         }
         if (isIgnored) {

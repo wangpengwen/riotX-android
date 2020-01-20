@@ -40,6 +40,7 @@ import im.vector.riotx.core.extensions.addFragment
 import im.vector.riotx.core.extensions.addFragmentToBackstack
 import im.vector.riotx.core.platform.ToolbarConfigurable
 import im.vector.riotx.core.platform.VectorBaseActivity
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import im.vector.riotx.features.home.HomeActivity
 import im.vector.riotx.features.login.terms.LoginTermsFragment
 import im.vector.riotx.features.login.terms.LoginTermsFragmentArgument
@@ -111,7 +112,7 @@ open class LoginActivity : VectorBaseActivity(), ToolbarConfigurable {
                     updateWithState(it)
                 }
 
-        loginViewModel.loginViewEvents
+        loginViewModel.viewEvents
                 .observe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -180,7 +181,7 @@ open class LoginActivity : VectorBaseActivity(), ToolbarConfigurable {
         }
     }
 
-    private fun handleLoginViewEvents(loginViewEvents: LoginViewEvents) {
+    private fun handleLoginViewEvents(loginViewEvents: VectorViewEvents) {
         when (loginViewEvents) {
             is LoginViewEvents.RegistrationFlowResult -> {
                 // Check that all flows are supported by the application

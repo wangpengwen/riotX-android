@@ -29,8 +29,6 @@ import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.extensions.observeEvent
 import im.vector.riotx.core.platform.StateView
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.HomeActivitySharedAction
 import im.vector.riotx.features.home.HomeSharedActionViewModel
 import kotlinx.android.synthetic.main.fragment_group_list.*
@@ -57,8 +55,6 @@ class GroupListFragment @Inject constructor(
             sharedActionViewModel.post(HomeActivitySharedAction.OpenGroup)
         }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         groupController.callback = null

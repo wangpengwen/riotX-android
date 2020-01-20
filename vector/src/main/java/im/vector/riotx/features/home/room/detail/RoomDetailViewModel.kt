@@ -62,7 +62,7 @@ import im.vector.riotx.core.resources.StringProvider
 import im.vector.riotx.core.resources.UserPreferencesProvider
 import im.vector.riotx.core.utils.LiveEvent
 import im.vector.riotx.core.utils.subscribeLogError
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import im.vector.riotx.features.command.CommandParser
 import im.vector.riotx.features.command.ParsedCommand
 import im.vector.riotx.features.home.room.detail.timeline.helper.TimelineDisplayableEvents
@@ -888,7 +888,7 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
     override fun onTimelineFailure(throwable: Throwable) {
         // If we have a critical timeline issue, we get back to live.
         timeline.restartWithEventId(null)
-        _viewEvents.post(CommonViewEvents.Failure(throwable))
+        _viewEvents.post(VectorViewEvents.Failure(throwable))
     }
 
     override fun onCleared() {

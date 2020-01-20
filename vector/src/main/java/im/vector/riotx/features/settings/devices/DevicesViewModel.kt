@@ -39,7 +39,7 @@ import im.vector.riotx.core.extensions.postLiveEvent
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.platform.VectorViewModelAction
 import im.vector.riotx.core.utils.LiveEvent
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import timber.log.Timber
 
 data class DevicesViewState(
@@ -163,7 +163,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                     )
                 }
 
-                _viewEvents.post(CommonViewEvents.Failure(failure))
+                _viewEvents.post(VectorViewEvents.Failure(failure))
             }
         })
     }
@@ -217,7 +217,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                         )
                     }
 
-                    _viewEvents.post(CommonViewEvents.Failure(failure))
+                    _viewEvents.post(VectorViewEvents.Failure(failure))
                 }
             }
 
@@ -271,7 +271,7 @@ class DevicesViewModel @AssistedInject constructor(@Assisted initialState: Devic
                     )
                 }
 
-                _viewEvents.post(CommonViewEvents.Failure(failure))
+                _viewEvents.post(VectorViewEvents.Failure(failure))
             }
         })
     }

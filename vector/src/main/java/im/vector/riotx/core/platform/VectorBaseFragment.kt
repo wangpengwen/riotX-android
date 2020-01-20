@@ -46,7 +46,7 @@ import im.vector.riotx.core.di.HasScreenInjector
 import im.vector.riotx.core.di.ScreenComponent
 import im.vector.riotx.core.error.ErrorFormatter
 import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import im.vector.riotx.features.navigation.Navigator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -127,19 +127,6 @@ abstract class VectorBaseFragment : BaseMvRxFragment(), HasScreenInjector {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mUnBinder = ButterKnife.bind(this, view)
-
-        getCommonViewEvent()?.let {
-            it.observe()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        dismissLoadingDialog()
-                        when (it) {
-                            is CommonViewEvents.Loading -> showLoading(it.message)
-                            is CommonViewEvents.Failure -> showFailure(it.throwable)
-                        }
-                    }
-                    .disposeOnDestroyView()
-        }
     }
 
     open fun showLoading(message: CharSequence?) {
@@ -149,8 +136,6 @@ abstract class VectorBaseFragment : BaseMvRxFragment(), HasScreenInjector {
     open fun showFailure(throwable: Throwable) {
         displayErrorDialog(throwable)
     }
-
-    abstract fun getCommonViewEvent(): DataSource<CommonViewEvents>?
 
     @CallSuper
     override fun onDestroyView() {
@@ -205,6 +190,27 @@ abstract class VectorBaseFragment : BaseMvRxFragment(), HasScreenInjector {
         assertMainThread()
         restorables.add(this)
         return this
+    }
+
+    protected fun <T : VectorViewEvents.FeatureViewEvents> DataSource<VectorViewEvents>.subscribeViewEvents(consumer: (T) -> Unit) {
+        this.observe()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    dismissLoadingDialog()
+                    when (it) {
+                        is VectorViewEvents.Loading -> showLoading(it.message)
+                        is VectorViewEvents.Failure -> showFailure(it.throwable)
+                        else                        -> {
+                            @Suppress("UNCHECKED_CAST") val featureViewEvents = it as? T
+                            if (featureViewEvents != null) {
+                                consumer(featureViewEvents)
+                            } else {
+                                Timber.v("Not handled view event: $it")
+                            }
+                        }
+                    }
+                }
+                .disposeOnDestroyView()
     }
 
     protected fun showErrorInSnackbar(throwable: Throwable) {

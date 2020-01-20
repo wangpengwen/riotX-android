@@ -29,8 +29,6 @@ import im.vector.matrix.android.api.failure.MatrixError
 import im.vector.riotx.R
 import im.vector.riotx.core.platform.OnBackPressed
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.net.ssl.HttpsURLConnection
 
 /**
@@ -60,8 +58,6 @@ abstract class AbstractLoginFragment : VectorBaseFragment(), OnBackPressed {
 
         loginSharedActionViewModel = activityViewModelProvider.get(LoginSharedActionViewModel::class.java)
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = loginViewModel.viewEvents
 
     override fun showFailure(throwable: Throwable) {
         when (throwable) {

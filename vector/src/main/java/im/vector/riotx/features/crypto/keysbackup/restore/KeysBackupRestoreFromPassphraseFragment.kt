@@ -34,8 +34,6 @@ import com.google.android.material.textfield.TextInputLayout
 import im.vector.riotx.R
 import im.vector.riotx.core.extensions.showPassword
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import javax.inject.Inject
 
 class KeysBackupRestoreFromPassphraseFragment @Inject constructor(): VectorBaseFragment() {
@@ -88,8 +86,6 @@ class KeysBackupRestoreFromPassphraseFragment @Inject constructor(): VectorBaseF
             return@setOnEditorActionListener false
         }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     private fun spannableStringForHelperText(context: Context): SpannableString {
         val clickableText = context.getString(R.string.keys_backup_restore_use_recovery_key)

@@ -29,6 +29,7 @@ import im.vector.riotx.R
 import im.vector.riotx.core.di.ScreenComponent
 import im.vector.riotx.core.error.ErrorFormatter
 import im.vector.riotx.core.extensions.replaceFragment
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import im.vector.riotx.features.MainActivity
 import im.vector.riotx.features.MainActivityArgs
 import im.vector.riotx.features.login.LoginActivity
@@ -62,7 +63,7 @@ class SoftLogoutActivity : LoginActivity() {
                     updateWithState(it)
                 }
 
-        softLogoutViewModel.softLogoutViewEvents
+        softLogoutViewModel.viewEvents
                 .observe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -71,7 +72,7 @@ class SoftLogoutActivity : LoginActivity() {
                 .disposeOnDestroy()
     }
 
-    private fun handleSoftLogoutViewEvents(softLogoutViewEvents: SoftLogoutViewEvents) {
+    private fun handleSoftLogoutViewEvents(softLogoutViewEvents: VectorViewEvents) {
         when (softLogoutViewEvents) {
             is SoftLogoutViewEvents.ErrorNotSameUser -> {
                 // Pop the backstack

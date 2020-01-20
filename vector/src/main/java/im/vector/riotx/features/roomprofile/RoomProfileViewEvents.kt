@@ -16,9 +16,11 @@
 
 package im.vector.riotx.features.roomprofile
 
+import im.vector.riotx.core.viewevents.VectorViewEvents
+
 /**
  * Transient events for RoomProfile
  */
-sealed class RoomProfileViewEvents {
+sealed class RoomProfileViewEvents: VectorViewEvents.FeatureViewEvents() {
     object OnLeaveRoomSuccess : RoomProfileViewEvents()
 }

@@ -36,7 +36,7 @@ import im.vector.riotx.core.extensions.hasUnsavedKeys
 import im.vector.riotx.core.platform.VectorViewModel
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import im.vector.riotx.features.login.LoginMode
 import timber.log.Timber
 
@@ -77,9 +77,6 @@ class SoftLogoutViewModel @AssistedInject constructor(
     }
 
     private var currentTask: Cancelable? = null
-
-    private val _softLogoutViewEvents = PublishDataSource<SoftLogoutViewEvents>()
-    val softLogoutViewEvents: DataSource<SoftLogoutViewEvents> = _softLogoutViewEvents
 
     init {
         // Get the supported login flow
@@ -159,7 +156,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
 
     private fun handleClearData() {
         // Notify the Activity
-        _softLogoutViewEvents.post(SoftLogoutViewEvents.ClearData)
+        _viewEvents.post(SoftLogoutViewEvents.ClearData)
     }
 
     private fun handlePasswordChange(action: SoftLogoutAction.PasswordChanged) {
@@ -187,7 +184,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
         withState { softLogoutViewState ->
             if (softLogoutViewState.userId != action.credentials.userId) {
                 Timber.w("User login again with SSO, but using another account")
-                _softLogoutViewEvents.post(SoftLogoutViewEvents.ErrorNotSameUser(
+                _viewEvents.post(SoftLogoutViewEvents.ErrorNotSameUser(
                         softLogoutViewState.userId,
                         action.credentials.userId))
             } else {
@@ -199,7 +196,7 @@ class SoftLogoutViewModel @AssistedInject constructor(
                 currentTask = session.updateCredentials(action.credentials,
                         object : MatrixCallback<Unit> {
                             override fun onFailure(failure: Throwable) {
-                                _viewEvents.post(CommonViewEvents.Failure(failure))
+                                _viewEvents.post(VectorViewEvents.Failure(failure))
                                 setState {
                                     copy(
                                             asyncLoginAction = Uninitialized

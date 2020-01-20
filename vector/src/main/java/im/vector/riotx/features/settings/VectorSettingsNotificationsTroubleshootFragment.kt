@@ -32,8 +32,6 @@ import im.vector.riotx.R
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.platform.VectorBaseActivity
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.rageshake.BugReporter
 import im.vector.riotx.features.settings.troubleshoot.NotificationTroubleshootTestManager
 import im.vector.riotx.features.settings.troubleshoot.TroubleshootTest
@@ -138,8 +136,6 @@ class VectorSettingsNotificationsTroubleshootFragment @Inject constructor(
         mRecyclerView.adapter = testManager?.adapter
         testManager?.runDiagnostic()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = null
 
     override fun onDestroyView() {
         mRecyclerView.cleanup()

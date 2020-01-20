@@ -27,7 +27,7 @@ import im.vector.matrix.android.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
 import im.vector.matrix.rx.rx
 import im.vector.matrix.rx.unwrap
 import im.vector.riotx.core.platform.VectorViewModel
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 
 class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: RoomSettingsViewState,
                                                         private val session: Session)
@@ -78,7 +78,7 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
                     copy(isLoading = false)
                 }
 
-                _viewEvents.post(CommonViewEvents.Failure(failure))
+                _viewEvents.post(VectorViewEvents.Failure(failure))
             }
 
             override fun onSuccess(data: Unit) {

@@ -34,9 +34,7 @@ import im.vector.riotx.core.extensions.configureWith
 import im.vector.riotx.core.extensions.observeEvent
 import im.vector.riotx.core.platform.VectorBaseActivity
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.toast
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_generic_recycler.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
 import javax.inject.Inject
@@ -67,8 +65,6 @@ class VectorSettingsDevicesFragment @Inject constructor(
             maybeShowDeleteDeviceWithPasswordDialog()
         }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun showFailure(throwable: Throwable) {
         super.showFailure(throwable)

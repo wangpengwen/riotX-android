@@ -32,11 +32,10 @@ import im.vector.riotx.core.animations.AppBarStateChangeListener
 import im.vector.riotx.core.animations.MatrixItemAppBarStateChangeListener
 import im.vector.riotx.core.extensions.cleanup
 import im.vector.riotx.core.extensions.configureWith
+import im.vector.riotx.core.extensions.exhaustive
 import im.vector.riotx.core.extensions.setTextOrHide
 import im.vector.riotx.core.platform.StateView
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import im.vector.riotx.features.home.AvatarRenderer
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_matrix_profile.*
@@ -80,18 +79,13 @@ class RoomMemberProfileFragment @Inject constructor(
         appBarStateChangeListener = MatrixItemAppBarStateChangeListener(headerView, listOf(matrixProfileToolbarAvatarImageView,
                 matrixProfileToolbarTitleView))
         matrixProfileAppBarLayout.addOnOffsetChangedListener(appBarStateChangeListener)
-        viewModel.roomMemberProfileviewEvents
-                .observe()
-                .subscribe {
-                    dismissLoadingDialog()
+        viewModel.viewEvents
+                .subscribeViewEvents<RoomMemberProfileViewEvents> {
                     when (it) {
                         is RoomMemberProfileViewEvents.OnIgnoreActionSuccess -> Unit
-                    }
+                    }.exhaustive
                 }
-                .disposeOnDestroyView()
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         matrixProfileAppBarLayout.removeOnOffsetChangedListener(appBarStateChangeListener)

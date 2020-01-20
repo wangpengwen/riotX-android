@@ -33,9 +33,7 @@ import im.vector.matrix.android.api.session.user.model.User
 import im.vector.riotx.R
 import im.vector.riotx.core.extensions.*
 import im.vector.riotx.core.platform.VectorBaseFragment
-import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.DimensionConverter
-import im.vector.riotx.core.viewevents.CommonViewEvents
 import kotlinx.android.synthetic.main.fragment_create_direct_room.*
 import javax.inject.Inject
 
@@ -66,8 +64,6 @@ class CreateDirectRoomKnownUsersFragment @Inject constructor(
             renderSelectedUsers(it)
         }
     }
-
-    override fun getCommonViewEvent(): DataSource<CommonViewEvents>? = viewModel.viewEvents
 
     override fun onDestroyView() {
         knownUsersController.callback = null

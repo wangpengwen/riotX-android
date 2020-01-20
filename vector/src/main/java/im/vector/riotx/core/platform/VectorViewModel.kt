@@ -24,7 +24,7 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.Success
 import im.vector.riotx.core.utils.DataSource
 import im.vector.riotx.core.utils.PublishDataSource
-import im.vector.riotx.core.viewevents.CommonViewEvents
+import im.vector.riotx.core.viewevents.VectorViewEvents
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -32,8 +32,8 @@ abstract class VectorViewModel<S : MvRxState, A : VectorViewModelAction>(initial
     : BaseMvRxViewModel<S>(initialState, false) {
 
     // Generic handling of any loading or request error
-    protected val _viewEvents = PublishDataSource<CommonViewEvents>()
-    val viewEvents: DataSource<CommonViewEvents> = _viewEvents
+    protected val _viewEvents = PublishDataSource<VectorViewEvents>()
+    val viewEvents: DataSource<VectorViewEvents> = _viewEvents
 
     /**
      * This method does the same thing as the execute function, but it doesn't subscribe to the stream
